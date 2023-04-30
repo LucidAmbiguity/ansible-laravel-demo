@@ -1,12 +1,15 @@
 ---
 - name: Checks if Composer is already installed
-  command: "{{ composer_path }}"
+  expect:
+    command: "{{ composer_path }}"
+    responses:
+      '\u001b[30;43mDo not run Composer as root/super user! See https://getcomposer.org/root for details\u001b[39;49m\r\n\u001b[32mContinue as root/super user\u001b[39m [\u001b[33myes\u001b[39m]? ': "Y\n"
+
   ignore_errors: true
   register: composer_installed
 
 - name: Install Composer if its not already installed
   block:
-
     - name: Download Composer Installation Script (if not already installed)
       get_url:
         url: https://getcomposer.org/installer
@@ -23,7 +26,7 @@
         src: composer.phar
         dest: /usr/local/bin/composer
         remote_src: yes
-        mode: '0755'
+        mode: "0755"
 
     - name: Remove phar
       file:
