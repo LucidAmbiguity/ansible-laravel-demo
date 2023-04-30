@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- name: Laravel-deploy
+  hosts: all
   become: true
   tasks:
     - name: Make sure the remote app root exists and has the right permissions
@@ -7,8 +8,8 @@
         path: "{{ remote_www_root }}/{{ app_root_dir }}"
         state: directory
         mode: '0755'
-        owner: "{{ remote_user }}"
-        group: "{{ remote_user }}"
+        owner: "{{ murphy_user }}"
+        group: "{{ murphy_user }}"
 
     - name: Rsync application files to the remote server
       synchronize:
@@ -22,36 +23,40 @@
       acl:
         path: "{{ remote_www_root }}/{{ app_root_dir }}/storage/"
         entry: group:www-data:rwX
-        recursive: yes
+        recursive: true
         state: present
 
     - name: Set up additional directory permissions for www-data user on bootstrap/cache folder
       acl:
         path: "{{ remote_www_root }}/{{ app_root_dir }}/bootstrap/cache/"
         entry: group:www-data:rwX
-        recursive: yes
+        recursive: true
         state: present
 
     - name: Set up .env file
       template:
         src: laravel-env.j2
         dest: "{{ remote_www_root }}/{{ app_root_dir }}/.env"
+        mode: preserve
 
     - name: Install Dependencies with Composer
       become: false
       composer:
         command: install
         working_dir: "{{ remote_www_root }}/{{ app_root_dir }}"
-      tags: [ 'composer:install' ]
+      tags: ['composer:install']
 
     - name: Generate app key
       command: "/usr/bin/php {{ remote_www_root }}/{{ app_root_dir }}/artisan key:generate"
-      tags: [ 'laravel', 'artisan:key' ]
+      tags: ['laravel', 'artisan:key']
+      changed_when: false
 
     - name: Set up app storage link
       command: "/usr/bin/php {{ remote_www_root }}/{{ app_root_dir }}/artisan storage:link"
-      tags: [ 'laravel', 'artisan:storage' ]
+      tags: ['laravel', 'artisan:storage']
+      changed_when: false
 
     - name: Run Migrations + Seeders
       command: "/usr/bin/php {{ remote_www_root }}/{{ app_root_dir }}/artisan migrate --seed"
-      tags: [ 'laravel', 'artisan:migrate' ]
+      tags: ['laravel', 'artisan:migrate']
+      changed_when: false
