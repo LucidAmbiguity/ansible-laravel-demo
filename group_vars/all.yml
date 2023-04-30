@@ -9,7 +9,7 @@ mysql_app_user: travellist_user
 mysql_app_pass: DB_PASSWORD
 
 # Web Server Setup
-http_host: "{{ ansible_facts.eth0.ipv4.address }}"
+http_host: "192.168.1.109"
 remote_www_root: /var/www
 app_root_dir: travellist-demo
 document_root: "{{ remote_www_root }}/{{ app_root_dir }}/public"

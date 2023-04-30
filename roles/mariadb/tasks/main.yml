@@ -12,6 +12,8 @@
     password: "{{ mysql_root_password }}"
     login_host: localhost
     login_port: 3306
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
 
     # login_unix_socket: /var/run/mysqld/mysqld.sock
   no_log: false
@@ -20,19 +22,22 @@
     name: ""
     host_all: yes
     state: absent
-    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
   no_log: false
 - name: Removes the MySQL test database
   mysql_db:
     name: test
     state: absent
-    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
 
 - name: Creates App Database
   mysql_db:
     name: "{{ mysql_app_db }}"
     state: present
-    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
 
 - name: Create App MySQL user and grants access to App DB
   mysql_user:
@@ -40,5 +45,6 @@
     password: "{{ mysql_app_pass }}"
     priv: "{{ mysql_app_db }}.*:ALL"
     state: present
-    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
   no_log: true
