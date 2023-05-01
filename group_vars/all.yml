@@ -11,7 +11,7 @@ mysql_app_pass: DB_PASSWORD
 # Web Server Setup
 http_host: "192.168.1.109"
 remote_www_root: /var/www
-app_root_dir: travellist-demo
+app_root_dir: orange-owl
 document_root: "{{ remote_www_root }}/{{ app_root_dir }}/public"
 
 # Laravel Env Variables

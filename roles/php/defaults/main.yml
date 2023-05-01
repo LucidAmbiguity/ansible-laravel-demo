@@ -1,5 +1,12 @@
 ---
-php_packages: [ "php-mbstring", "php-bcmath", "php-xml" ]
+php_packages:
+  [
+    "php8.2-mbstring",
+    "php8.2-bcmath",
+    "php8.2-xml",
+    "php8.2-curl",
+    "php8.2-zip",
+  ]
 php_file_uploads: "On"
 php_upload_max_filesize: "64M"
 php_max_file_uploads: "20"

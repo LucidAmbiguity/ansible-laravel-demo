@@ -1,9 +1,11 @@
 ---
 - name: Checks if Composer is already installed
-  expect:
-    command: "{{ composer_path }}"
-    responses:
-      '\u001b[30;43mDo not run Composer as root/super user! See https://getcomposer.org/root for details\u001b[39;49m\r\n\u001b[32mContinue as root/super user\u001b[39m [\u001b[33myes\u001b[39m]? ': "Y\n"
+  become: false
+  command: "{{ composer_path }}"
+  tags: ["comp_install"]
+  # expect:
+  #   responses:
+  #     ''
 
   ignore_errors: true
   register: composer_installed
